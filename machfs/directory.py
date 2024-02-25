@@ -361,6 +361,8 @@ class File:
         self.rsrc = bytearray()
         self.data = bytearray()
 
+        self.filFlags = 1 << 1 # file thread record exists, but is not locked, nor "file record is used"
+
     def __str__(self):
         if isinstance(self.aliastarget, File):
             return '[alias] ' + str(self.aliastarget)

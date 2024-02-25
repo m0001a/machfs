@@ -287,6 +287,7 @@ class Volume(AbstractFolder):
 
                 f.data = getfork(filLgLen, filExtRec, filFlNum, 'data')
                 f.rsrc = getfork(filRLgLen, filRExtRec, filFlNum, 'rsrc')
+                f.filFlags = filFlags
 
             # elif datatype == 3:
             #     print('dir thread:', rec)
@@ -521,7 +522,7 @@ class Volume(AbstractFolder):
                 drFilCnt += 1
 
                 cdrType = 2
-                filFlags = 1 << 1 # file thread record exists, but is not locked, nor "file record is used"
+                filFlags = wrap.of.filFlags
                 filTyp = 0
                 filUsrWds = struct.pack('>4s4sHHHxxxxxx', wrap.type, wrap.creator, obj.flags, obj.x, obj.y)
                 filFlNum = wrap.cnid
