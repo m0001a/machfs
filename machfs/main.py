@@ -198,11 +198,14 @@ class Volume(AbstractFolder):
 
         self.crdate = self.mddate = self.bkdate = 0
         self.name = 'Untitled'
+        self.preamble = b''
 
     def read(self, from_volume):
         for i in range(0, len(from_volume), 512):
             if from_volume[i+1024:i+1024+2] == b'BD':
-                if i: from_volume = from_volume[i:]
+                if i:
+                    self.preamble = from_volume[:i]
+                    from_volume = from_volume[i:]
                 break
         else:
             raise ValueError('Magic number not found in image')
@@ -617,7 +620,7 @@ class Volume(AbstractFolder):
         vib += bytes(512-len(vib))
 
         assert all(len(x) == drAlBlkSiz for x in blkaccum)
-        left_elements = [bootblocks, vib, bitmap, *blkaccum]
+        left_elements = [self.preamble, bootblocks, vib, bitmap, *blkaccum]
 
         unused_offset = sum(len(x) for x in left_elements)
         unused_length = size - unused_offset - 2*512
